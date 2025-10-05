@@ -19,6 +19,14 @@ app.get('/', function(req,res){
     });
 });
 
+//When our form will be submitted, it will come to this route==>/create
+app.post('/create', function(req,res){
+   fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.detailsoftasks, function(err){
+    //redirecting to /route
+    res.redirect("/");
+   });
+});
+
 
 //Create a route for displaying data of Read More.
 app.get('/file/:filename', function(req,res){
@@ -27,14 +35,23 @@ app.get('/file/:filename', function(req,res){
     });     
 });
 
-
-//When our form will be submitted, it will come to this route==>/create
-app.post('/create', function(req,res){
-   fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.detailsoftasks, function(err){
-    //redirecting to /route
-    res.redirect("/");
-   });
+//For displaying the data of edit.
+app.get('/edit/:filename', function(req,res){
+    //Now we willl render edit page.
+    res.render('edit',{filename:req.params.filename});
 });
+
+//Route for updating name
+app.post('/edit', function(req,res){
+    //At backend , we will get previous anme as previous and new name as new
+    // `./files/${req.body.previous}`==> This is our path
+    fs.rename(`./files/${req.body.previous}`, `./files/${req.body.new}`, function(err){
+        res.redirect("/");
+    });
+});
+
+
+
 
 
 
